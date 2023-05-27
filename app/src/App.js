@@ -5,6 +5,8 @@ import drizzleOptions from "./drizzleOptions";
 import MyComponent from "./MyComponent";
 import { toast } from 'react-toastify'
 import "./App.css";
+import Home from "./pages/requests";
+import RequestView from "./pages/requestItem";
 
 const contractEventNotifier = store => next => action => {
   if (action.type === EventActions.EVENT_FIRED) {
@@ -31,6 +33,19 @@ const drizzleStore = generateStore({drizzleOptions,
 const drizzle = new Drizzle(drizzleOptions, drizzleStore);
 console.log(drizzle);
 
+const router = createBrowserRouter([
+      {
+        path: '/',
+        index: true,
+        element: <Home />
+      },
+      {
+        path: '/view/:requestId',
+        element: <RequestView />
+      }
+])
+
+
 const App = () => {
   return (
     <DrizzleContext.Provider drizzle={drizzle}>
@@ -38,13 +53,18 @@ const App = () => {
         {drizzleContext => {
           const { drizzle, drizzleState, initialized } = drizzleContext;
 
-          if (!initialized) {
-            return "Loading..."
-          }
+          <RouterProvider router={router} />
 
-          return (
-            <MyComponent drizzle={drizzle} drizzleState={drizzleState} />
-          )
+
+          // Drizzle Base App
+
+          // if (!initialized) {
+          //   return "Loading..."
+          // }
+
+          // return (
+          //   <MyComponent drizzle={drizzle} drizzleState={drizzleState} />
+          // )
         }}
       </DrizzleContext.Consumer>
     </DrizzleContext.Provider>
